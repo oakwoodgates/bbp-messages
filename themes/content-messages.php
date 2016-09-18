@@ -25,11 +25,11 @@ defined('ABSPATH') || exit;
 		<span class="bbpm-user-status">
 
 			<?php if( bbpm_get_user_last_seen(bbpm_get_recipient()->ID) ) : ?>
-				
+
 				<?php echo bbpm_get_user_last_seen( bbpm_get_recipient()->ID ); ?>
-			
+
 			<?php else : ?>
-				
+
 				<?php echo apply_filters('bbpm_user_never_online_text', 'Not recently active'); ?>
 
 			<?php endif; ?>
@@ -39,11 +39,11 @@ defined('ABSPATH') || exit;
 		<?php do_action( 'bbpm_after_conversation_avatar_top_header', bbpm_get_recipient()->ID ); ?>
 
 		<div class="message-tools">
-			
+
 			<?php do_action( 'bbpm_before_conversation_top_header_links' ); ?>
 
 			<?php if ( bbpm_get_conversation( bbpm_get_conversation_id() ) ) : ?>
-			
+
 				<?php bbpm_conversation_search_form(); ?>
 
 				<a href="<?php echo bbpm_get_conversation_permalink( '?do=delete' ); ?>">delete</a>
@@ -58,7 +58,7 @@ defined('ABSPATH') || exit;
 			<?php if( bbpm_need_pagination() ) : ?>
 				<div class="bbpm-pagination"><?php echo bbpm_pagination(); ?></div>
 			<?php endif; ?>
-	
+
 		</div>
 
 		<?php do_action( 'bbpm_after_conversation_top_header', bbpm_get_recipient()->ID ); ?>
@@ -80,7 +80,7 @@ defined('ABSPATH') || exit;
 			<?php endforeach; ?>
 
 		<?php else : ?>
-	
+
 			<?php do_action( 'bbpm_conversations_no_messages' ); ?>
 
 			<p class="no-messages">
@@ -96,11 +96,11 @@ defined('ABSPATH') || exit;
 	<?php bbpm_single_seen_notice(); ?>
 
 	<div class="bbpm-input">
-		
+
 		<?php bbpm_conversation_form(); ?>
 
 	</div>
 
 </div>
 
-<?php do_action( 'bbpm_after_conversation_content', bbpm_get_recipient()->ID ); ?>
+<?php do_action( 'bbpm_after_conversation_content', bbpm_get_recipient()->ID );

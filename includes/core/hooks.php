@@ -59,7 +59,7 @@ class BBP_messages_hooks
 				$pm_id = $args->last_message->PM_ID;
 				$q = bbpm_get_search_query();
 				$query = $wpdb->get_results( "SELECT * FROM $table WHERE `PM_ID` = '$pm_id' AND NOT FIND_IN_SET('$current_user->ID', `deleted`) ORDER BY `ID` AND `message` LIKE '%$q%' DESC LIMIT 1" );
-				
+
 				if( ! empty( $query[0] ) && ! empty( $query[0]->PM_ID ) ) :;
 
 					$args->last_message = BBP_messages_message::instance()->get_message( $query[0]->ID );
@@ -113,11 +113,11 @@ class BBP_messages_hooks
 		});
 
 		add_action('bbp_user_edit_after_contact', function() {
-			
+
 			?>
 
 				<div>
-					<label for=""><?php echo apply_filters('bbpm_user_edit_notification_settings_intro_text', 'bbPress messages'); ?></label>	
+					<label for=""><?php echo apply_filters('bbpm_user_edit_notification_settings_intro_text', 'bbPress messages'); ?></label>
 					<label>
 						<input type="checkbox" name="bbpm_email_me" style="width: auto;" <?php echo checked( bbpm_can_notify( bbp_get_displayed_user_id() ) ); ?> />
 						<?php echo apply_filters('bbpm_user_edit_notification_settings_label_text', 'Email me whenever I receive a message on the forums'); ?>
@@ -177,20 +177,20 @@ class BBP_messages_hooks
 		}
 
 		add_filter('bbp_template_after_user_profile', function() {
-			
+
 			$user_id = bbp_get_displayed_user_id();
 			global $current_user;
-			
+
 			if( empty( $current_user->ID ) || !get_userdata( $user_id ) || $user_id == $current_user->ID )
 				return;
 
 			ob_start();
-			?>
 
-				<p>
-					<a href="<?php echo bbpm_get_conversation_permalink( '', $user_id ); ?>">Send <?php echo get_userdata( $user_id )->user_nicename; ?> a message</a>
-				</p>
-
+			// WPGURU4U
+			$uts = get_userdata( $user_id ); ?>
+			<p>
+				<a href="<?php echo bbpm_get_conversation_permalink( '', $user_id ); ?>">Send <?php echo ( filter_var( $uts->display_name, FILTER_VALIDATE_EMAIL ) ) ? $uts->nickname : $uts->display_name; ?> a message</a>
+			</p>
 			<?php
 
 			echo apply_filters('bbpm_bbp_template_after_user_profile', ob_get_clean());
@@ -198,20 +198,20 @@ class BBP_messages_hooks
 		});
 
 		add_action('bbp_theme_after_reply_author_details', function() {
-			
+
 			$user_id = bbp_get_reply_author_id();
 			global $current_user;
-			
+
 			if( empty( $current_user->ID ) || !get_userdata( $user_id ) || $user_id == $current_user->ID )
 				return;
 
 			ob_start();
-			?>
 
-				<p>
-					<a href="<?php echo bbpm_get_conversation_permalink( '', $user_id ); ?>">Send <?php echo get_userdata( $user_id )->user_nicename; ?> a message</a>
-				</p>
-
+			// WPGURU4U
+			$uts = get_userdata( $user_id ); ?>
+			<p>
+				<a href="<?php echo bbpm_get_conversation_permalink( '', $user_id ); ?>">Send <?php echo ( filter_var( $uts->display_name, FILTER_VALIDATE_EMAIL ) ) ? $uts->nickname : $uts->display_name; ?> a message</a>
+			</p>
 			<?php
 
 			echo apply_filters('bbpm_bbp_theme_after_reply_author_details', ob_get_clean());

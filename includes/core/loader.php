@@ -85,9 +85,9 @@ class BBP_messages_init
 					$_do = (string) $_GET['do'];
 
 					switch( $_do ) {
-			
+
 						case 'delete':
-							
+
 							$_message = isset( $_GET['m'] ) ? (int) $_GET['m'] : false;
 
 							if( $_message )
@@ -179,7 +179,7 @@ class BBP_messages_init
 		add_action( 'wp_head', function() {
 
 			if( bbpm_is_messages() ) :;
-				
+
 				ob_start();
 
 					?>
@@ -229,7 +229,7 @@ class BBP_messages_init
 				?>
 
 					<script type="text/javascript">
-						
+
 						window.addEventListener('load', function() {
 
 							var _list = document.querySelector('#bbp-user-navigation > ul');
@@ -244,9 +244,9 @@ class BBP_messages_init
 							}
 
 							<?php if( bbpm_is_messages() ) : ?>
-								
+
 								var _lis = document.querySelectorAll('#bbp-user-navigation > ul > li');
-								
+
 								for (var i=0;i<_lis.length;i++) {
 
 									var _classes = null !== _lis[i].getAttribute('class') ? _lis[i].getAttribute('class') : '';
@@ -308,7 +308,7 @@ class BBP_messages_init
 
 		function bbpm_is_single_message() {
 			$_excluded = array( bbpm_settings()->slugs->archives, 'page' );
-			/** in other words, 'archives' and 'page' can not be user nicenames, meaning 
+			/** in other words, 'archives' and 'page' can not be user nicenames, meaning
 			  * that you can't contact a user if their user nicename is 'archives', just
 			  * because it is reserved for the archives directory
 			  * You can use array_push to push more strings to ignore into (array) $_excluded
@@ -377,7 +377,7 @@ class BBP_messages_init
 			ob_start();
 
 				?>
-					
+
 					<?php echo $bail ? apply_filters('bbpm_cant_contact_notice', '<span class="bbpm-cant-contact">Sorry, you can not contact this user for the moment.<span>') : ''; ?>
 					<form action="<?php echo bbpm_get_conversation_permalink( false, $recipient ); ?>" method="post" <?php echo $bail ? 'class="disabled" ' : ' ' ?>>
 						<textarea name="_bbpm_message" <?php echo $bail ? 'disabled="disabled" ' : ' ' ?> placeholder="Write a message.."></textarea>
@@ -411,7 +411,7 @@ class BBP_messages_init
 		}
 
 		function bbpm_can_contact( $recipient = false ) {
-			
+
 			$bail = false; # Pro feature for user blocking
 
 			/**
@@ -427,7 +427,7 @@ class BBP_messages_init
 		}
 
 		function bbpm_my_conversations( $return_all = false ) {
-			
+
 			return BBP_messages_message::instance()->conversations( $return_all );
 
 		}
@@ -505,7 +505,7 @@ class BBP_messages_init
 				    break;
 				}
 				$str = $str == '' ? 'a moment' : substr($str, 0, -2);
-			
+
 				if( $before ) $before .= ' ';
 				if( $after ) $after = ' ' . $after;
 
@@ -568,7 +568,7 @@ class BBP_messages_init
 
 					}
 
-		            $string = str_replace( $pattern, '<iframe width="400" height="300" src="//www.youtube.com/embed/'.$videoID.'?rel=0" frameborder="0"></iframe>', $string );   
+		            $string = str_replace( $pattern, '<iframe width="400" height="300" src="//www.youtube.com/embed/'.$videoID.'?rel=0" frameborder="0"></iframe>', $string );
 
 		        }
 		    }
@@ -579,7 +579,7 @@ class BBP_messages_init
 		    foreach($matches[0] as $pattern){
 		        if(!array_key_exists($pattern, $usedPatterns)){
 		            $usedPatterns[$pattern]=true;
-		            $string = str_replace( $pattern, "<a href=\"".$pattern."\" rel=\"nofollow\" target=\"_blank\">$pattern</a> ", $string );   
+		            $string = str_replace( $pattern, "<a href=\"".$pattern."\" rel=\"nofollow\" target=\"_blank\">$pattern</a> ", $string );
 		        }
 		    }
 
@@ -588,7 +588,7 @@ class BBP_messages_init
 			//$string = bbpm_nl2p( $string );
 
 			$string = wpautop( $string );
-			
+
 			return apply_filters( 'bbpm_the_message', $string, $original_string );
 
 		}
@@ -611,7 +611,7 @@ class BBP_messages_init
 			if( !$pm_id ) $pm_id = bbpm_get_conversation_id();
 
 			$object = BBP_messages_message::instance()->get_conversation( $pm_id );
-			
+
 			$bool = false;
 
 			if( ! empty( $object->last_message ) && ! empty( $object->last_message->sender ) ) :;
@@ -773,11 +773,11 @@ class BBP_messages_init
 
 				if( ! bbpm_is_archives() ) {
 
-					$_markup .= '<a href="' . bbpm_messages_base() . '">Messages</a>';
+					$_markup .= '<a href="' . bbpm_messages_base() . '">Messages&nbsp;&nbsp;</a>';
 
 				} else {
 
-					$_markup .= '<a href="' . bbpm_messages_base( bbpm_settings()->slugs->archives . '/' ) . '">Archives</a>';
+					$_markup .= '<a href="' . bbpm_messages_base( bbpm_settings()->slugs->archives . '/' ) . '">Archives</a> ';
 
 				}
 
@@ -790,11 +790,11 @@ class BBP_messages_init
 				if( bbpm_is_archived( $_pm_id ) ) {
 
 					$_markup = $_args_before;
-					$_markup .= '<a href="' . bbpm_messages_base( bbpm_settings()->slugs->archives . '/' ) . '">Archives</a>';
+					$_markup .= '<a href="' . bbpm_messages_base( bbpm_settings()->slugs->archives . '/' ) . '">Archives</a> ';
 
 				}
 
-				$_markup .= '&nbsp;' . $_args_sep . '&nbsp;' . bbpm_get_recipient()->user_nicename;
+				$_markup .= ( filter_var( bbpm_get_recipient()->display_name, FILTER_VALIDATE_EMAIL ) ) ? bbpm_get_recipient()->nickname : bbpm_get_recipient()->display_name;
 
 			}
 
@@ -853,7 +853,7 @@ class BBP_messages_init
 			$_sub = $_sub ? '?q=' . $_sub : '';
 
 			$_prev_sub = 'page/' . $_prev . '/' . $_sub;
-			
+
 			if( $_prev < 2 )
 				$_prev_sub = $_sub;
 
@@ -873,14 +873,14 @@ class BBP_messages_init
 				return $link;
 			}
 
-			ob_start(); 
-			
+			ob_start();
+
 				?>
 
 					<?php if( $_current > 2 ) : ?>
 						<a href="<?php echo _base( $_sub ); ?>" title="First page">&laquo;</a>
 					<?php endif; ?>
-					
+
 					<?php if( $_current > 1 ) : ?>
 						<a href="<?php echo _base( $_prev_sub ); ?>" title="Previous page">&lsaquo;</a>
 					<?php endif; ?>
@@ -1000,13 +1000,13 @@ class BBP_messages_init
 			}
 
 			return (object) $return;
-			
+
 		}
 
 		function bbpm_nl2p( $string ) {
 			# credit: http://stackoverflow.com/questions/7409512/new-line-to-paragraph-function#7409591
 			$string = str_replace(array('<p>', '</p>', '<br>', '<br />'), '', $string);
-			$string = '<p>'.preg_replace( array("/([\n]{2,})/i", "/([\r\n]{3,})/i","/([^>])\n([^<])/i"), array("</p>\n<p>", "</p>\n<p>", '$1<br/>$2'), trim($string)).'</p>'; 
+			$string = '<p>'.preg_replace( array("/([\n]{2,})/i", "/([\r\n]{3,})/i","/([^>])\n([^<])/i"), array("</p>\n<p>", "</p>\n<p>", '$1<br/>$2'), trim($string)).'</p>';
 		    return str_replace( '<br/>', "</p>\n<p>", $string );
 		}
 
@@ -1046,7 +1046,7 @@ class BBP_messages_init
 		}
 
 		function bbpm_bbp_get_user_profile_url( $user_id = false ) {
-			
+
 			if( ! $user_id )
 				$user_id = wp_get_current_user()->ID;
 

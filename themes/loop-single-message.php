@@ -10,7 +10,7 @@ $user_id = bbpm_get_conversation( $pm_id )->contact;
 <?php do_action('bbpm_before_snippet', $user_id); ?>
 
 <div class="<?php bbpm_message_snippet_classes( $pm_id ); ?>" id="pm-<?php echo $pm_id; ?>" data-slug="<?php echo bbpm_get_conversation( $pm_id )->contact_slug; ?>/" title="view messages">
-	
+
 	<?php do_action('bbpm_before_snippet_content', $user_id); ?>
 
 	<div class="avatar-cont">
@@ -20,13 +20,15 @@ $user_id = bbpm_get_conversation( $pm_id )->contact;
 	</div>
 
 	<div class="content-cont">
-		
+
 		<?php do_action('bbpm_before_snippet_message_details', $user_id); ?>
 
 		<div class="contact-date">
-			
+
 			<span>
-				<?php echo get_userdata( $user_id )->user_nicename; ?>
+				<?php // WPGURU4U edit 9/17/16 ?>
+				<?php $xyz = get_userdata( $user_id ); ?>
+				<?php echo ( filter_var( $xyz->display_name, FILTER_VALIDATE_EMAIL ) ) ? $xyz->nickname : $xyz->display_name; ?>
 				<?php if( (int) bbpm_get_counts(false, $pm_id)->unread_cnt > 0 && bbpm_get_counts(false, $pm_id)->unread_cnt > 0 ) : ?>
 					(<?php echo bbpm_get_counts(false, $pm_id)->unread_cnt; ?>)
 				<?php endif; ?>
@@ -43,13 +45,13 @@ $user_id = bbpm_get_conversation( $pm_id )->contact;
 			</span>
 
 			<?php do_action('bbpm_before_snippet_message_excerpt', $user_id); ?>
-			
+
 			<?php echo bbpm_message_snippet_excerpt( bbpm_get_conversation( $pm_id )->last_message->ID ); ?>
-			
+
 			<?php do_action('bbpm_after_snippet_message_excerpt', $user_id); ?>
 
 		</div>
-	
+
 		<?php do_action('bbpm_after_snippet_message_details', $user_id); ?>
 
 	</div>
@@ -60,5 +62,4 @@ $user_id = bbpm_get_conversation( $pm_id )->contact;
 
 </div>
 
-
-<?php do_action('bbpm_after_snippet', $user_id); ?>
+<?php do_action('bbpm_after_snippet', $user_id);

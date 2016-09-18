@@ -53,16 +53,16 @@ class BBP_messages_message
 
 			do_action('bbpm_pre_send_message', $_args );
 
-			$wpdb->insert( 
-				$table, 
-				array( 
+			$wpdb->insert(
+				$table,
+				array(
 
 					'PM_ID'		=> $pm_id,
 					'sender'	=> $current_user->ID,
 					'recipient'	=> $recipient,
 					'message'	=> $message,
 					'date'		=> time()
-					
+
 				)
 			);
 
@@ -111,9 +111,9 @@ class BBP_messages_message
 		}
 
 		global $wpdb;
-		$wpdb->insert( 
-			$wpdb->prefix . BBPM_TABLE, 
-			array( 
+		$wpdb->insert(
+			$wpdb->prefix . BBPM_TABLE,
+			array(
 				'PM_ID'		=> $this->pm_id( $recipient, $sender )->id,
 				'sender'	=> $sender,
 				'recipient'	=> $recipient,
@@ -230,18 +230,18 @@ class BBP_messages_message
 		  * You can use this action hook to perform other actions
 		  * right before performing the email notifications
 		  * for instance if you don't want to notify this recipient,
-		  * you would just use 
+		  * you would just use
 		  * wp_redirect( bbpm_messages_base(false, get_userdata($recipient)->user_nicename) );
 		  * followed by exit;
 		  */
 		do_action('bbpm_beofre_notify_user', $recipient, $message_id);
 
 		add_filter( 'wp_mail_content_type', array( $this, 'bbpm_set_html_mail_content_type' ) );
-		 
+
 		wp_mail( $_email, $_subject, $_body );
 
 		remove_filter( 'wp_mail_content_type', array( $this, 'bbpm_set_html_mail_content_type' ) );
-		 
+
 	}
 
 	public function bbpm_set_html_mail_content_type() {
@@ -264,7 +264,10 @@ class BBP_messages_message
 			$args->ID = (int) $query[0]->ID;
 			$args->PM_ID = (int) $query[0]->PM_ID;
 			$args->sender = (int) $query[0]->sender;
-			$args->sender_name = ! empty( get_userdata( $args->sender )->user_nicename ) ? get_userdata( $args->sender )->user_nicename : false;
+			// WPGURU4U
+			$xyz = get_userdata( $args->sender );
+			$args->sender_name = ( filter_var( $xyz->display_name, FILTER_VALIDATE_EMAIL ) ) ? $xyz->nickname : $xyz->display_name;
+//			$args->sender_name = ! empty( get_userdata( $args->sender )->user_nicename ) ? get_userdata( $args->sender )->user_nicename : false;
 			$args->recipient = (int) $query[0]->recipient;
 			$args->recipient_name = ! empty( get_userdata( $args->recipient )->user_nicename ) ? get_userdata( $args->recipient )->user_nicename : false;
 			$args->message = (string) $query[0]->message;
@@ -364,7 +367,11 @@ class BBP_messages_message
 
 			$args->contact = $current_user->ID !== $this->get_message( $query[0]->ID )->sender ? $this->get_message( $query[0]->ID )->sender : $this->get_message( $query[0]->ID )->recipient;
 
-			$args->contact_slug = get_userdata( $args->contact )->user_nicename;
+			// WPGuru4u edit 9/9/16
+		//	$args->contact_slug = get_userdata( $args->contact )->user_nicename;
+			$xyz = get_userdata( $args->contact );
+			$args->contact_slug =
+			$xyz->user_nicename;
 
 			$args->last_message = $this->get_message( $query[0]->ID );
 
@@ -462,7 +469,7 @@ class BBP_messages_message
 		if( isset( $_POST['_bbpm_send'] ) ) :;
 
 			$_message = isset( $_POST['_bbpm_message'] ) ? $_POST['_bbpm_message'] : false;
-		
+
 			$_recipient = ! empty( bbpm_get_recipient()->ID ) ? bbpm_get_recipient()->ID : false;
 
 			$this->send( $_recipient, $_message );
@@ -503,9 +510,9 @@ class BBP_messages_message
 
 			if( $unread ) {
 
-				$wpdb->update( 
-					$table, 
-					array( 
+				$wpdb->update(
+					$table,
+					array(
 						'seen' => null
 					),
 					array(
@@ -515,9 +522,9 @@ class BBP_messages_message
 
 			} else {
 
-				$wpdb->update( 
-					$table, 
-					array( 
+				$wpdb->update(
+					$table,
+					array(
 						'seen' => time()
 					),
 					array(
@@ -564,7 +571,7 @@ class BBP_messages_message
 			switch( $_doing ) {
 
 				case 'block':
-					
+
 					$array = bbpm_get_user_blocked_list();
 					$_array = array_keys($array, $_target);
 
@@ -740,7 +747,7 @@ class BBP_messages_message
 		$current_page = bbpm_pagination(true)->current_page;
 		$res_per_pg = bbpm_pagination(true)->messages_per_page;
 
-		return array_slice( $array, ( $current_page * $res_per_pg ) - $res_per_pg, $res_per_pg );	
+		return array_slice( $array, ( $current_page * $res_per_pg ) - $res_per_pg, $res_per_pg );
 
 	}
 
@@ -799,7 +806,7 @@ class BBP_messages_message
 		# messages
 
 		$query = $wpdb->get_results( "SELECT `ID`,`sender`,`recipient` FROM $table WHERE `recipient` = '$user_id' OR `sender` = '$user_id'" );
-		
+
 		$_sent = 0;
 		$_received = 0;
 		$_count_all = 0;

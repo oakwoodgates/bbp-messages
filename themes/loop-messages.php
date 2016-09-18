@@ -8,7 +8,7 @@ defined('ABSPATH') || exit;
 <?php do_action( 'bbpm_before_messages_template' ); ?>
 
 <div class="bbpm-archive">
-	
+
 	<?php bbpm_breadcrumb(); ?>
 
 	<?php do_action( 'bbpm_before_messages_top_header' ); ?>
@@ -18,7 +18,7 @@ defined('ABSPATH') || exit;
 		<?php do_action( 'bbpm_before_messages_top_header_content' ); ?>
 
 		<div class="message-tools">
-			
+
 			<?php bbpm_conversation_search_form(); ?>
 
 			<?php do_action( 'bbpm_before_messages_top_header_links' ); ?>
@@ -27,7 +27,7 @@ defined('ABSPATH') || exit;
 				unread <?php echo bbpm_get_counts()->unreads > 0 ? '('.bbpm_get_counts()->unreads.')' : ''; ?>
 			</a>
 			&middot;
-			
+
 			<a href="<?php echo bbpm_messages_base(); ?>" id="__refresh">refresh</a>
 
 			<?php do_action( 'bbpm_after_messages_top_header_links' ); ?>
@@ -35,7 +35,7 @@ defined('ABSPATH') || exit;
 			<?php if( bbpm_need_pagination() ) : ?>
 				<div class="bbpm-pagination"><?php echo bbpm_pagination(); ?></div>
 			<?php endif; ?>
-	
+
 		</div>
 
 		<?php do_action( 'bbpm_after_messages_top_header_content' ); ?>
@@ -64,4 +64,4 @@ defined('ABSPATH') || exit;
 
 </div>
 
-<?php do_action( 'bbpm_after_messages_template' ); ?>
+<?php do_action( 'bbpm_after_messages_template' );
